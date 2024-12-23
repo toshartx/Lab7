@@ -7,7 +7,7 @@ void SignInterpretator(std::string& number)
   else if (number[0] == 43)
     number[0] = 48;
   else
-    number.insert(0, 2, '0');
+    number.insert(0, 1, '0');
 }
 
 void ToDirect2(std::string& number)
@@ -69,31 +69,21 @@ void ZeroAddition2(std::string& num1, std::string& num2)
     num1.insert(1, abs(zeroAddition), '0');
   else if (zeroAddition > 0)
     num2.insert(1, abs(zeroAddition), '0');
-  std::cout << num1 << '\n' << num2 << '\n';
 }
 
 std::string SumBinaryNumbers(std::string num1, std::string num2)
 {
   // Сложение чисел в дополнительном коде
   std::string result(num1.size(), '0');
-  bool sumAddition = 0;
+  int sumAddition = 0;
   for (int i = num1.size() - 1; i >= 0; --i) // O(n)
   {
-    if (num1[i] == 48 && num2[i] == 48)
-    {
-      result[i] = 48 + sumAddition;
-    }
-    else if (num1[i] == 48 && num2[i] == 49 || num2[i] == 48 && num1[i] == 49)
-    {
-      result[i] = 49 + sumAddition;
-      if (result[i] == 50)
-        result[i] = 48;
-    }
-    else if (num1[i] == 49 && num2[i] == 49)
-    {
-      result[i] = 48 + sumAddition;
-    }
-    sumAddition = (num1[i] - 48 + num2[i] - 48 + sumAddition) / 2;
+    int sum = 0;
+    short digit1 = num1[i] - '0';
+    short digit2 = num2[i] - '0';
+    sum = (digit1 + digit2 + sumAddition) % 2;
+    sumAddition = (digit1 + digit2 + sumAddition) / 2;
+    result[i] = sum + '0';
   }
 
   ToDirect2(result);
@@ -101,11 +91,11 @@ std::string SumBinaryNumbers(std::string num1, std::string num2)
     result[0] = '+';
   else
     result[0] = '-';
-
-  int firstOne = 0;
-  while (result[firstOne] != 49)
-    ++firstOne;
-  result.erase(result.begin() + 1, result.begin() + firstOne);
+  result.erase(1, result.find_first_not_of('0'));
+  if (result.empty())
+  {
+    return "0";
+  }
   return result;
 }
 
